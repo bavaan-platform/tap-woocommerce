@@ -21,7 +21,9 @@ class ProductsStream(WooCommerceStream):
         th.Property("slug", th.StringType),
         th.Property("permalink", th.StringType),
         th.Property("date_created", th.DateTimeType),
+        th.Property("date_created_gmt", th.DateTimeType),
         th.Property("date_modified", th.DateTimeType),
+        th.Property("date_modified_gmt", th.DateTimeType),
         th.Property("type", th.StringType),
         th.Property("status", th.StringType),
         th.Property("featured", th.BooleanType),
@@ -29,11 +31,13 @@ class ProductsStream(WooCommerceStream):
         th.Property("description", th.StringType),
         th.Property("short_description", th.StringType),
         th.Property("sku", th.StringType),
-        th.Property("price", th.NumberType),
-        th.Property("regular_price", th.NumberType),
-        th.Property("sale_price", th.NumberType),
+        th.Property("price", th.StringType),
+        th.Property("regular_price", th.StringType),
+        th.Property("sale_price", th.StringType),
         th.Property("date_on_sale_from", th.DateTimeType),
+        th.Property("date_on_sale_from_gmt", th.DateTimeType),
         th.Property("date_on_sale_to", th.DateTimeType),
+        th.Property("date_on_sale_to_gmt", th.DateTimeType),
         th.Property("price_html", th.StringType),
         th.Property("on_sale", th.BooleanType),
         th.Property("purchasable", th.BooleanType),
@@ -115,4 +119,76 @@ class ProductsStream(WooCommerceStream):
             th.Property("key", th.StringType),
             th.Property("value", th.StringType)
         ))),
+        th.Property("has_options", th.BooleanType),
+        th.Property("_links", th.ObjectType(
+            th.Property("self", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+            th.Property("collection", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+        )),
+        th.Property("low_stock_amount", th.ArrayType(th.IntegerType)),
+    ).to_dict()
+
+
+class CategoriesStream(WooCommerceStream):
+    """Define custom stream."""
+    name = "categories"
+    path = "products/categories"
+    primary_keys = ["id"]
+    replication_key = None
+
+    schema = th.PropertiesList(
+        th.Property("id", th.IntegerType),
+        th.Property("name", th.StringType),
+        th.Property("slug", th.StringType),
+        th.Property("parent", th.IntegerType),
+        th.Property("description", th.StringType),
+        th.Property("display", th.StringType),
+        th.Property("image", th.ObjectType(
+            th.Property("id", th.IntegerType),
+            th.Property("date_created", th.DateTimeType),
+            th.Property("date_created_gmt", th.DateTimeType),
+            th.Property("date_modified", th.DateTimeType),
+            th.Property("date_modified_gmt", th.DateTimeType),
+            th.Property("src", th.StringType),
+            th.Property("name", th.StringType),
+            th.Property("alt", th.StringType)
+        )),
+        th.Property("menu_order", th.IntegerType),
+        th.Property("count", th.IntegerType),
+        th.Property("_links", th.ObjectType(
+            th.Property("self", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+            th.Property("collection", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+        ))
+    ).to_dict()
+
+
+class ProductsAttributeStream(WooCommerceStream):
+    """Define custom stream."""
+    name = "products_attribute"
+    path = "products/attributes"
+    primary_keys = ["id"]
+    replication_key = None
+
+    schema = th.PropertiesList(
+        th.Property("id", th.IntegerType),
+        th.Property("name", th.StringType),
+        th.Property("slug", th.StringType),
+        th.Property("type", th.StringType),
+        th.Property("order_by", th.StringType),
+        th.Property("has_archives", th.BooleanType),
+        th.Property("_links", th.ObjectType(
+            th.Property("self", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+            th.Property("collection", th.ArrayType(th.ObjectType(
+                th.Property("href", th.StringType),
+            ))),
+        ))
     ).to_dict()
