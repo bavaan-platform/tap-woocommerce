@@ -25,7 +25,9 @@ class ProductsStream(WooCommerceStream):
         th.Property("price", th.StringType),
         th.Property("options", th.ArrayType(th.ObjectType(
             th.Property("title", th.StringType),
-            th.Property("values", th.ArrayType(th.StringType))
+            th.Property("values", th.ArrayType(th.ObjectType(
+                th.Property("title", th.StringType),
+            ))),
         ))),
         th.Property("media_gallery_entries", th.ArrayType(th.ObjectType(
             th.Property("id", th.IntegerType),
@@ -51,10 +53,14 @@ class ProductsStream(WooCommerceStream):
                     "source": "woocommerce"
                 }
                 for attribute in item['attributes']:
-                    raw_data['options'].append({
+                    data_atb = {
                         "title": attribute['name'],
-                        "values": attribute['options']
-                    })
+                        "values": []
+                    }
+                    for option in attribute['options']:
+                        data = {"title": option}
+                        data_atb['values'].append(data)
+                    raw_data['options'].append(data_atb)
                 for image in item['images']:
                     raw_data['media_gallery_entries'].append({
                         "id": image['id'],
@@ -120,7 +126,7 @@ class ProductsAttributeStream(WooCommerceStream):
             for item in data:
                 raw_data = {
                     "id": item['id'],
-                    "attribute_code": item['slug'],
+                    "attribute_code": item['id'],
                     "default_frontend_label": item['name'],
                     "default_value": item['name'],
                     "source": "woocommerce",
