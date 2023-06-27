@@ -126,7 +126,7 @@ class ProductsAttributeStream(WooCommerceStream):
             for item in data:
                 raw_data = {
                     "id": item['id'],
-                    "attribute_code": item['id'],
+                    "attribute_code": item['slug'],
                     "default_frontend_label": item['name'],
                     "default_value": item['name'],
                     "source": "woocommerce",
